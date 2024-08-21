@@ -24,6 +24,7 @@ jobs:
         with: 
           repository: ${{ secrets.REPOSITORY }}
           token: ${{ secrets.PAT }}
+          path: './project'
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
