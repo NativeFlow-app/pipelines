@@ -15,7 +15,15 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: macos-14
+    env:
+      APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
+      APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
+      APPLE_DEVELOPER_PORTAL_TEAM_ID: ${{ secrets.APPLE_DEVELOPER_PORTAL_TEAM_ID }}
+      APPLE_STORE_CONNECT_TEAM_ID: ${{ secrets.APPLE_STORE_CONNECT_TEAM_ID }}
+      APPLE_P8_AUTH_KEY: ${{ secrets.APPLE_P8_AUTH_KEY }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -26,18 +34,22 @@ jobs:
           token: ${{ secrets.PAT }}
           path: './project'
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-        # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.8
+      
+      - name: Install Dependencies
         run: |
           cd project
-          ls
+          yarn
+          cd ios
+          bundle install
+          bundle exec pod install
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Build and deploy
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          echo "${{ secrets.APPLE_P8_AUTH_KEY }}" > fastlane/secretKey.p8
+          bundle exec fastlane ios internal
+        env:
+          RUBYOPT: '-rostruct' # TODO: Remove when https://github.com/fastlane/fastlane/pull/21950 gets released
+        
