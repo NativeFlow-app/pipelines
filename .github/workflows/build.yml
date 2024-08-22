@@ -48,6 +48,8 @@ jobs:
 
       - name: Build and deploy
         run: |
+          cd project
+          cd ios
           echo "${{ secrets.APPLE_P8_AUTH_KEY }}" > fastlane/secretKey.p8
           bundle exec fastlane ios internal
         env:
