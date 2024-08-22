@@ -37,7 +37,34 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7.8
-      
+          
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - uses: actions/cache@v4
+        id: vendor-cache # use this to check for `cache-hit` (`steps.vendor-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ./vendor
+          key: ${{ runner.os }}-ios-vendor-${{ hashFiles('./Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-ios-vendor-${{ hashFiles('./Gemfile.lock') }}
+
+      - uses: actions/cache@v4
+        with:
+          path: ./ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+
       - name: Install Dependencies
         run: |
           yarn
