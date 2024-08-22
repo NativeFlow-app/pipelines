@@ -33,6 +33,10 @@ jobs:
           repository: ${{ secrets.REPOSITORY }}
           token: ${{ secrets.PAT }}
           path: './project'
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.8
       
       - name: Install Dependencies
         run: |
@@ -46,6 +50,7 @@ jobs:
         run: |
           cd project
           cd ios
+          pwd
           echo "${{ secrets.APPLE_P8_AUTH_KEY }}" > fastlane/secretKey.p8
           bundle exec fastlane ios internal
         env:
