@@ -40,7 +40,7 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.4.0
+          ruby-version: 3.4.2
           
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -71,6 +71,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          Corepack enable
           yarn
           cd ios
           bundle install
