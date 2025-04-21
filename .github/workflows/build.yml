@@ -37,22 +37,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.14.0
+          cache: 'npm'
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.8
-          
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v4
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('./yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-${{ hashFiles('./yarn.lock') }}
+          ruby-version: 3.4.2
 
       - uses: actions/cache@v4
         id: vendor-cache # use this to check for `cache-hit` (`steps.vendor-cache.outputs.cache-hit != 'true'`)
@@ -69,22 +58,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
 
-      - name: Install Dependencies
-        run: |
-          node -v
-          Corepack enable
-          yarn -v
-          yarn
-          cd ios
-          bundle install
-          bundle exec pod install
+      - name: Install Node Modules
+        run: npm ci
+
+      - name: Install iOS Dependencies
+        run: npm run pod-install
 
       - name: Build and deploy
         run: |
           cd ios
-          pwd
           echo "${{ secrets.APPLE_P8_AUTH_KEY }}" > fastlane/secretKey.p8
           bundle exec fastlane ios internal
-        env:
-          RUBYOPT: '-rostruct' # TODO: Remove when https://github.com/fastlane/fastlane/pull/21950 gets released
         
