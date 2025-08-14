@@ -28,6 +28,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Set Xcode version 
+        run: sudo xcode-select -s /Applications/Xcode_16.4.0.app
+
       - uses: actions/checkout@v4
         with: 
           repository: ${{ secrets.REPOSITORY }}
