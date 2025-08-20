@@ -62,7 +62,7 @@ jobs:
             ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
 
       - name: Install Node Modules
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Install iOS Dependencies
         run: npm run pod-install
