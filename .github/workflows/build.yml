@@ -20,7 +20,6 @@ jobs:
       APPLE_STORE_CONNECT_TEAM_ID: ${{ secrets.APPLE_STORE_CONNECT_TEAM_ID }}
       APPLE_P8_AUTH_KEY: ${{ secrets.APPLE_P8_AUTH_KEY }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-      MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
