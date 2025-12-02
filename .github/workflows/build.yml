@@ -68,7 +68,7 @@ jobs:
         run: |
           cd ios
           echo "${{ secrets.APPLE_P8_AUTH_KEY }}" > fastlane/secretKey.p8
-          echo "${{ secrets.MATCH_REPO_PRIVATE_KEY }}" > ./ios/fastlane/fastlane_certs_match_cli
-          chmod 400 ./ios/fastlane/fastlane_certs_match_cli
+          echo "${{ secrets.MATCH_REPO_PRIVATE_KEY }}" > fastlane/fastlane_certs_match_cli
+          chmod 400 fastlane/fastlane_certs_match_cli
           bundle exec fastlane ios internal
         
