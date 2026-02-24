@@ -63,6 +63,13 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+      
+      - uses: actions/cache@v4
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install Node Modules
         run: npm ci
@@ -70,10 +77,10 @@ jobs:
       - name: Install iOS Dependencies
         run: npm run pod-install
 
-      - name: Build and deploy
-        run: |
-          echo "${{ secrets.APPLE_P8_AUTH_KEY }}" > ./ios/fastlane/secretKey.p8
-          echo "${{ secrets.MATCH_REPO_PRIVATE_KEY }}" > ./ios/fastlane/fastlane_certs_match_cli
-          chmod 400 ./ios/fastlane/fastlane_certs_match_cli
-          cd ios && bundle exec fastlane ios internal
+      # - name: Build and deploy
+      #   run: |
+      #     echo "${{ secrets.APPLE_P8_AUTH_KEY }}" > ./ios/fastlane/secretKey.p8
+      #     echo "${{ secrets.MATCH_REPO_PRIVATE_KEY }}" > ./ios/fastlane/fastlane_certs_match_cli
+      #     chmod 400 ./ios/fastlane/fastlane_certs_match_cli
+      #     cd ios && bundle exec fastlane ios internal
         
