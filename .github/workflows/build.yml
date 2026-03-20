@@ -33,21 +33,8 @@ jobs:
           token: ${{ secrets.PAT }}
           path: './'
 
-      - name: Install asdf
-        uses: asdf-vm/actions/setup@v4
-
-      - name: Cache asdf
-        uses: actions/cache@v4
-        with:
-          path: |
-            /Users/runner/.asdf
-          key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
-          restore-keys: |
-            ${{ runner.os }}-asdf-
-
-
-      - name: Install asdf & tools
-        uses: asdf-vm/actions/install@v4
+      - name: Install mise
+        uses: jdx/mise-action@v4
 
       - name: Get npm cache directory
         id: npm-cache-dir
